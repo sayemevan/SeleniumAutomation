@@ -1,4 +1,4 @@
-package elements;
+package com.ababil.generic.actions.elements;
 
 import org.openqa.selenium.*;
 
