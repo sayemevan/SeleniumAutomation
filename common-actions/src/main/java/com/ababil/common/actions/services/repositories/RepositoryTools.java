@@ -4,11 +4,11 @@ import java.util.Properties;
 
 public interface RepositoryTools {
 
-    Properties getObjectRepository(String propertyFileName);
+    Properties getObjectRepository(String propertyFileName) throws Exception;
 
     String[] getActiveObjectRepository(String objectName);
 
-    String[] findObject(Properties properties, String propertyFileName, String objectName);
+    String[] findObject(Properties properties, String propertyFileName, String objectName) throws Exception;
 
     String getPropertyValue(String propertiesFileName, String propertyKeyName);
 

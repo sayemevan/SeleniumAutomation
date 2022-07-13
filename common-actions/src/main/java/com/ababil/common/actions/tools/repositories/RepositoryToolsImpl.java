@@ -3,9 +3,7 @@ package com.ababil.common.actions.tools.repositories;
 import com.ababil.common.actions.data.FileExtensions;
 import com.ababil.common.actions.data.PropertyFiles;
 import com.ababil.common.actions.enums.PropertyFileName;
-import com.ababil.common.actions.services.reports.ReportMsgs;
 import com.ababil.common.actions.services.repositories.RepositoryTools;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
@@ -14,26 +12,17 @@ import java.util.Properties;
 @Component
 public class RepositoryToolsImpl implements RepositoryTools {
 
-    @Autowired
-    private ReportMsgs reportMsgs;
-
     @Override
-    public Properties getObjectRepository(String propertyFileName) {
-        try {
-            Properties properties = new Properties();
-            if(propertyFileName != null) {
-                if (!propertyFileName.endsWith(FileExtensions.PROPERTIES_FILE)) {
-                    propertyFileName = propertyFileName + FileExtensions.PROPERTIES_FILE;
-                }
-                InputStream stream = ClassLoader.getSystemResourceAsStream(propertyFileName);
-                properties.load(stream);
+    public Properties getObjectRepository(String propertyFileName) throws Exception {
+        Properties properties = new Properties();
+        if (propertyFileName != null) {
+            if (!propertyFileName.endsWith(FileExtensions.PROPERTIES_FILE)) {
+                propertyFileName = propertyFileName + FileExtensions.PROPERTIES_FILE;
             }
-            return properties;
-
-        } catch (Exception e) {
-            reportMsgs.insertErrorMsgToArray(reportMsgs.printStackTraceError(e), null);
-            return null;
+            InputStream stream = ClassLoader.getSystemResourceAsStream(propertyFileName);
+            properties.load(stream);
         }
+        return properties;
     }
 
     @Override
@@ -42,27 +31,20 @@ public class RepositoryToolsImpl implements RepositoryTools {
     }
 
     @Override
-    public String[] findObject(Properties properties, String propertyFileName, String objectName) {
-        try {
-            if (properties.isEmpty()) {
-                properties = getObjectRepository(propertyFileName);
-            }
-            if (properties.containsKey(objectName)) {
-                return properties.getProperty(objectName).split("~");
-            } else if (PropertyFiles.getPropertyFile(PropertyFileName.COMMON_OBJECTS.toString()) != null) {
-                return getPropertyValue(PropertyFileName.COMMON_OBJECTS.toString(), objectName).split("~");
-            } else if (PropertyFiles.getPropertyFile(PropertyFileName.UTILITY_OBJECTS.toString()) != null){
-                return getPropertyValue(PropertyFileName.UTILITY_OBJECTS.toString(), objectName).split("~");
-            }
-
-            System.out.println("Incorrect object name : " + objectName);
-            reportMsgs.insertErrorMsgToArray("Object not found! Incorrect object name : " + objectName, null);
-
-            return null;
-        } catch (Exception e) {
-            reportMsgs.insertErrorMsgToArray(reportMsgs.printStackTraceError(e), null);
-            return null;
+    public String[] findObject(Properties properties, String propertyFileName, String objectName) throws Exception {
+        if (properties.isEmpty()) {
+            properties = getObjectRepository(propertyFileName);
         }
+        if (properties.containsKey(objectName)) {
+            return properties.getProperty(objectName).split("~");
+        } else if (PropertyFiles.getPropertyFile(PropertyFileName.COMMON_OBJECTS.toString()) != null) {
+            return getPropertyValue(PropertyFileName.COMMON_OBJECTS.toString(), objectName).split("~");
+        } else if (PropertyFiles.getPropertyFile(PropertyFileName.UTILITY_OBJECTS.toString()) != null) {
+            return getPropertyValue(PropertyFileName.UTILITY_OBJECTS.toString(), objectName).split("~");
+        }
+
+        System.out.println("Incorrect object name : " + objectName);
+        return null;
     }
 
     @Override
