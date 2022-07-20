@@ -1,7 +1,9 @@
 package com.ababil.common.actions.tools.repositories;
 
+import com.ababil.common.actions.arrays.ReportArrays;
 import com.ababil.common.actions.data.FileExtensions;
 import com.ababil.common.actions.data.PropertyFiles;
+import com.ababil.common.actions.enums.DateTimeMask;
 import com.ababil.common.actions.enums.PropertyFileName;
 import com.ababil.common.actions.services.repositories.RepositoryTools;
 import org.springframework.stereotype.Component;
@@ -43,7 +45,7 @@ public class RepositoryToolsImpl implements RepositoryTools {
             return getPropertyValue(PropertyFileName.UTILITY_OBJECTS.toString(), objectName).split("~");
         }
 
-        System.out.println("Incorrect object name : " + objectName);
+        ReportArrays.getTestDetailLog().add("Incorrect object name : " + objectName);
         return null;
     }
 
